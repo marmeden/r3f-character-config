@@ -15,12 +15,21 @@ const AssetsBox = () => {
                     <button
                         key={category.id}
                         onClick={() => setCurrentCategory(category)}
-                        className={`transition-colors duration-200 font-medium ${
-                            currentCategory === category.name
+                        className={`transition-colors duration-200 font-medium cursor-pointer ${
+                            currentCategory.name === category.name
                                 ? "text-indigo-500"
                                 : "text-gray-500 hover:text-gray-700" 
                         }`}>
                             {category.name}
+                    </button>
+                ))}
+            </div>
+            <div className="flex gap-2 flex-wrap">
+                {currentCategory?.assets.map((asset, index) => (
+                    <button
+                        key={index}
+                        className={`w-20 h-20 rounded-md overflow-hidden bg-gray-200 pointer-events-auto border-none hover:opacity-100 transition-all border-2 duration-500`}>
+                        <img src={`${import.meta.env.VITE_API_URL}${asset.thumbnail}`} />
                     </button>
                 ))}
             </div>
