@@ -16,22 +16,22 @@ const AssetsBox = () => {
     }, []);
 
     return (
-        <div className="rounded-2xl bg-white drop-shadow-md p-6 gap-6 flex flex-col">
-            <div className="flex items-center gap-6 pointer-events-auto">
+        <div className="md:rounded-t-lg bg-gradient-to-br from-black/30 to-indigo-900/20  backdrop-blur-sm drop-shadow-md flex flex-col py-6 gap-3 overflow-hidden">
+            <div className="flex items-center gap-8 pointer-events-auto noscrollbar overflow-x-auto px-6 pb-2">
                 {categories.map((category) => (
                     <button
                         key={category.id}
                         onClick={() => setCurrentCategory(category)}
-                        className={`transition-colors duration-200 font-medium cursor-pointer ${
-                            currentCategory.name === category.name
-                                ? "text-indigo-500"
-                                : "text-gray-500 hover:text-gray-700" 
+                        className={`transition-colors duration-200 font-medium flex-shrink-0 border-b ${
+                        currentCategory?.name === category.name
+                            ? "text-white shadow-purple-100 border-b-white"
+                            : "text-gray-200 hover:text-gray-100 border-b-transparent"
                         }`}>
                             {category.name}
                     </button>
                 ))}
             </div>
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 flex-wrap px-6">
                 {currentCategory?.assets.map((asset, index) => (
                     <button
                         key={index}
@@ -64,9 +64,9 @@ const DownloadButton = () => {
 
 export const UI = () => {
     return (
-        <main className="pointer-events-none fixed z-10 inset-0 p-10">
+        <main className="pointer-events-none fixed z-10 inset-0 select-none">
             <div className="mx-auto h-full max-w-screen-xl w-full flex flex-col justify-between">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center p-10">
                     <a 
                         className="pointer-events-auto"
                         href="">
@@ -74,7 +74,7 @@ export const UI = () => {
                     </a>
                     <DownloadButton />
                 </div>
-                <div className="flex flex-col gap-6">
+                <div className="px-10 flex flex-col">
                     <AssetsBox />
                 </div>
             </div>

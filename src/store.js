@@ -12,16 +12,30 @@ export const useConfiguratorStore = create((set) => ({
     customization: {},
     download: () => {},
     setDownload: (download) => set({download}),
+    updateColor: (color) => {
+        set((state) => ({
+            customization: {
+                ...state.customization,
+                [state.currentCategory.name]: {
+                    ...state.customization[state.currentCategory.name],
+                    color,
+                },
+            }
+        }))
+    },
     fetchCategories: async() => {
-        const res = await fetch(`${url}/api/customization-groups?populate=startingAsset`);
+        const res = await fetch(`${url}/api/customization-groups?populate=startingAsset, customizationPalette`);
         const data = await res.json()
+
+        console.log(data)
 
         const categories = data.data.map((c) => {
             return {
                 name: c.attributes.name,
                 position: c.attributes.position,
                 id: c.id,
-                startingAsset: c.attributes.startingAsset.data?.id
+                startingAsset: c.attributes.startingAsset.data?.id,
+                customizationPalette: c.attributes.customizationPalette.data?.attributes.colors
             }
         })
 
@@ -41,7 +55,9 @@ export const useConfiguratorStore = create((set) => ({
         const customization = {}
         categories.forEach((category) => {
             category.assets = assets.filter((asset) => asset.group === category.id)
-            customization[category.name] = {}
+            customization[category.name] = {
+                color: category?.customizationPalette?.[0] || ""
+            }
 
             if(category.startingAsset) {
                 customization[category.name].asset = category.assets.find((asset) => asset.id == category.startingAsset)
