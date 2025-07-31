@@ -11,21 +11,20 @@ export const useConfiguratorStore = create((set) => ({
     assets: [],
     customization: {},
     fetchCategories: async() => {
-        const res = await fetch(`${url}/api/customization-groups`);
+        const res = await fetch(`${url}/api/customization-groups?populate=startingAsset`);
         const data = await res.json()
 
         const categories = data.data.map((c) => {
             return {
                 name: c.attributes.name,
                 position: c.attributes.position,
-                id: c.id
+                id: c.id,
+                startingAsset: c.attributes.startingAsset.data?.id
             }
         })
 
         const res2 = await fetch(`${url}/api/customization-assets?populate=*&pagination[pageSize]=50`)
         const data2 = await res2.json()
-
-        console.log(data2)
 
         const assets = data2.data.map((a) => {
             return {
@@ -41,6 +40,10 @@ export const useConfiguratorStore = create((set) => ({
         categories.forEach((category) => {
             category.assets = assets.filter((asset) => asset.group === category.id)
             customization[category.name] = {}
+
+            if(category.startingAsset) {
+                customization[category.name].asset = category.assets.find((asset) => asset.id == category.startingAsset)
+            }
         })
 
         set({ categories, currentCategory: categories[0], assets, customization })
