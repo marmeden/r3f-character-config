@@ -2,7 +2,14 @@ import { useEffect } from "react";
 import { useConfiguratorStore } from "../store"
 
 const AssetsBox = () => {
-    const { categories, currentCategory, fetchCategories, setCurrentCategory } = useConfiguratorStore();
+    const { 
+            categories, 
+            currentCategory, 
+            fetchCategories, 
+            setCurrentCategory, 
+            changeAsset, 
+            customization 
+    } = useConfiguratorStore();
 
     useEffect(() => {
         fetchCategories()
@@ -28,7 +35,14 @@ const AssetsBox = () => {
                 {currentCategory?.assets.map((asset, index) => (
                     <button
                         key={index}
-                        className={`w-20 h-20 rounded-md overflow-hidden bg-gray-200 pointer-events-auto border-none hover:opacity-100 transition-all border-2 duration-500`}>
+                        onClick={() => changeAsset(currentCategory.name, asset)}
+                        className={`w-20 h-20 rounded-md overflow-hidden bg-gray-200 pointer-events-auto  hover:opacity-100 transition-all border-2 duration-500
+                            ${
+                                customization[currentCategory.name]?.asset?.id === asset.id
+                                ? "border-indigo-600 opacity-100"
+                                : "border-transparent opacity-80"
+                            }
+                        `}>
                         <img src={`${import.meta.env.VITE_API_URL}${asset.thumbnail}`} />
                     </button>
                 ))}
