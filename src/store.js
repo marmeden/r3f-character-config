@@ -10,6 +10,8 @@ export const useConfiguratorStore = create((set) => ({
     currentCategory: null,
     assets: [],
     customization: {},
+    download: () => {},
+    setDownload: (download) => set({download}),
     fetchCategories: async() => {
         const res = await fetch(`${url}/api/customization-groups?populate=startingAsset`);
         const data = await res.json()
