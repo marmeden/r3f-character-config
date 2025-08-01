@@ -10,3 +10,12 @@
 body {
   margin: 0;
 }
+
+.noscrollbar {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.noscrollbar::-webkit-scrollbar {
+  display: none;
+}

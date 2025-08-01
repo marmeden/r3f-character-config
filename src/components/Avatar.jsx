@@ -57,6 +57,7 @@ export const Avatar = ({...props}) => {
                         <Suspense
                             key={customization[key].asset.id}>
                             <Asset
+                                categoryName={key}
                                 url={`${import.meta.env.VITE_API_URL}${customization[key].asset.url}`}
                                 skeleton={nodes.Plane.skeleton}
                             />

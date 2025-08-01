@@ -35,7 +35,7 @@ export const useConfiguratorStore = create((set) => ({
                 position: c.attributes.position,
                 id: c.id,
                 startingAsset: c.attributes.startingAsset.data?.id,
-                customizationPalette: c.attributes.customizationPalette.data?.attributes.colors
+                colorPalette: c.attributes.customizationPalette.data?.attributes.colors
             }
         })
 
@@ -56,7 +56,7 @@ export const useConfiguratorStore = create((set) => ({
         categories.forEach((category) => {
             category.assets = assets.filter((asset) => asset.group === category.id)
             customization[category.name] = {
-                color: category?.customizationPalette?.[0] || ""
+                color: category?.colorPalette?.[0] || ""
             }
 
             if(category.startingAsset) {

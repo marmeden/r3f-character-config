@@ -36,14 +36,16 @@ const AssetsBox = () => {
                     <button
                         key={index}
                         onClick={() => changeAsset(currentCategory.name, asset)}
-                        className={`w-20 h-20 rounded-md overflow-hidden bg-gray-200 pointer-events-auto  hover:opacity-100 transition-all border-2 duration-500
+                        className={`w-20 h-20 rounded-md overflow-hidden pointer-events-auto  hover:opacity-100 transition-all border-2 duration-300 cursor-pointer
                             ${
                                 customization[currentCategory.name]?.asset?.id === asset.id
-                                ? "border-indigo-600 opacity-100"
+                                ? "border-white opacity-100"
                                 : "border-transparent opacity-80"
                             }
                         `}>
-                        <img src={`${import.meta.env.VITE_API_URL}${asset.thumbnail}`} />
+                        <img 
+                        className="object-cover w-full h-full"
+                        src={`${import.meta.env.VITE_API_URL}${asset.thumbnail}`} />
                     </button>
                 ))}
             </div>
@@ -63,6 +65,8 @@ const DownloadButton = () => {
 }
 
 export const UI = () => {
+    const currentCategory = useConfiguratorStore((state) => state.currentCategory)
+    const customization = useConfiguratorStore((state) => state.customization)
     return (
         <main className="pointer-events-none fixed z-10 inset-0 select-none">
             <div className="mx-auto h-full max-w-screen-xl w-full flex flex-col justify-between">
@@ -75,9 +79,49 @@ export const UI = () => {
                     <DownloadButton />
                 </div>
                 <div className="px-10 flex flex-col">
+                    {currentCategory?.colorPalette && 
+                    customization[currentCategory.name] && <ColorPicker />
+                    }
                     <AssetsBox />
                 </div>
             </div>
         </main>
+    )
+}
+
+
+const ColorPicker = () => {
+    const updateColor = useConfiguratorStore((state) => state.updateColor)
+    const currentCategory = useConfiguratorStore((state) => state.currentCategory)
+
+    const handleColorChange = (color) => {
+        updateColor(color)
+    }
+
+    const customization = useConfiguratorStore((state) => state.customization)
+
+    if(!customization[currentCategory.name]?.asset) {
+        return null
+    }
+
+    return (
+        <div className="pointer-events-auto relative flex gap-2 max-w-full overflow-x-auto backdrop-blur-sm py-2 drop-shadow-md">
+            {
+                currentCategory.colorPalette?.map((color, index) => (
+                    <button
+                        key={`${index}-${color}`}
+                        className={`w-10 h-10 p-1.5 drop-shadow-md bg-black/20 shrink-0 rounded-lg overflow-hidden transition-all duration-300 border-2 
+                        ${customization[currentCategory.name].color === color
+                        ? "border-white"
+                        : "border-transparent"}`}
+                        onClick={() => handleColorChange(color)}>
+                            <div className="w-full h-full rounded-md"
+                            style={{backgroundColor: color}}>
+
+                            </div>
+                    </button>
+                ))
+            }
+        </div>
     )
 }
