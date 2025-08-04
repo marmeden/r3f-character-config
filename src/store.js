@@ -1,3 +1,5 @@
+import { MeshStandardMaterial } from 'three'
+import { randInt } from 'three/src/math/MathUtils.js'
 import { create } from 'zustand'
 
 const url = import.meta.env.VITE_API_URL
@@ -5,10 +7,14 @@ if(!url) {
     throw new Error("API URL is required")
 }
 
-export const useConfiguratorStore = create((set) => ({
+export const useConfiguratorStore = create((set, get) => ({
     categories: [],
     currentCategory: null,
     assets: [],
+    skin: new MeshStandardMaterial({
+        color: 0xf5c6a5,
+        roughness: 1
+    }),
     customization: {},
     download: () => {},
     setDownload: (download) => set({download}),
@@ -21,7 +27,14 @@ export const useConfiguratorStore = create((set) => ({
                     color,
                 },
             }
-        }))
+        }));
+
+        if(get().currentCategory.name === 'Head') {
+            get().updateSkin(color)
+        }
+    },
+    updateSkin: (color) => {
+        get().skin.color.set(color)
     },
     fetchCategories: async() => {
         const res = await fetch(`${url}/api/customization-groups?populate=startingAsset, customizationPalette`);
@@ -35,7 +48,8 @@ export const useConfiguratorStore = create((set) => ({
                 position: c.attributes.position,
                 id: c.id,
                 startingAsset: c.attributes.startingAsset.data?.id,
-                colorPalette: c.attributes.customizationPalette.data?.attributes.colors
+                colorPalette: c.attributes.customizationPalette.data?.attributes.colors,
+                removable: c.attributes.removable
             }
         })
 
@@ -82,5 +96,28 @@ export const useConfiguratorStore = create((set) => ({
                 }
             ))
         }
-    )
+    ),
+
+    randomize: () => {
+        const customization = {}
+        get().categories.forEach((category) => {
+            let randomAsset = category.assets[randInt(0, category.assets.length - 1)]
+            if(category.removable) {
+                if(randInt(0, category.assets.length - 1) === 0) {
+                    randomAsset = null
+                }
+            }
+            const randomColor = category.colorPalette?.[randInt(0, category.colorPalette.length - 1)]
+            customization[category.name] = {
+                asset: randomAsset,
+                color: randomColor
+            }
+
+            if(category.name === 'Head') {
+                get().updateSkin(randomColor)
+            }
+        })
+
+        set({customization})
+    }
 }))
