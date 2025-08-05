@@ -11,6 +11,7 @@ export const useConfiguratorStore = create((set, get) => ({
     categories: [],
     currentCategory: null,
     assets: [],
+    lockedGroups: {},
     skin: new MeshStandardMaterial({
         color: 0xf5c6a5,
         roughness: 1
@@ -55,6 +56,7 @@ export const useConfiguratorStore = create((set, get) => ({
 
         const res2 = await fetch(`${url}/api/customization-assets?populate=*&pagination[pageSize]=50`)
         const data2 = await res2.json()
+        console.log(data2)
 
         const assets = data2.data.map((a) => {
             return {
@@ -62,7 +64,8 @@ export const useConfiguratorStore = create((set, get) => ({
                 group: a.attributes.customization_group.data.id,
                 id: a.id,
                 thumbnail: a.attributes.thumbnail.data.attributes.url,
-                url: a.attributes.url.data.attributes.url
+                url: a.attributes.url.data.attributes.url,
+                lockedGroups: a.attributes.lockedGroups.data?.map((d) => d.id)
             }
         })
 
@@ -79,6 +82,7 @@ export const useConfiguratorStore = create((set, get) => ({
         })
 
         set({ categories, currentCategory: categories[0], assets, customization })
+        get().applyLockedAssets()
     },
 
     setCurrentCategory: (category) => set({ currentCategory: category }),
@@ -95,6 +99,7 @@ export const useConfiguratorStore = create((set, get) => ({
                     }
                 }
             ))
+            get().applyLockedAssets()
         }
     ),
 
@@ -119,5 +124,32 @@ export const useConfiguratorStore = create((set, get) => ({
         })
 
         set({customization})
+        get().applyLockedAssets()
+    },
+
+    applyLockedAssets: () => {
+        const customization = get().customization
+        const categories = get().categories
+        const lockedGroups = {}
+
+        Object.values(customization).forEach((category) => {
+            if(category.asset?.lockedGroups) {
+                category.asset.lockedGroups.forEach((group) => {
+                    const categoryName = categories.find((category) => category.id === group).name
+                    if(!lockedGroups[categoryName]) {
+                        lockedGroups[categoryName] = []
+                    }
+
+                    const lockingAssetCategoryName = categories.find((cat) => cat.id === category.asset.group)
+
+                    lockedGroups[categoryName].push({
+                        name: category.asset.name,
+                        categoryName
+                    })
+                })
+            }
+        })
+
+        set({lockedGroups})
     }
 }))

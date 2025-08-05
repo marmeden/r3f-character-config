@@ -8,6 +8,7 @@ export const Asset = ({
     const { scene } = useGLTF(url)
 
     const customization = useConfiguratorStore((state) => state.customization)
+    const lockedGroups = useConfiguratorStore((state) => state.lockedGroups)
 
     const assetColor = customization[categoryName].color
 
@@ -39,6 +40,10 @@ export const Asset = ({
 
         return items
     }, [scene])
+
+    if(lockedGroups[categoryName]) {
+        return null
+    }
 
     return attachedItems.map((item, index) => (
         <skinnedMesh 
