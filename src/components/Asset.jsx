@@ -33,7 +33,9 @@ export const Asset = ({
                     geometry: child.geometry,
                     material: child.material.name.includes("Skin_")
                     ? skin
-                    : child.material
+                    : child.material,
+                    morphTargetDictionary: child.morphTargetDictionary,
+                    morphTargetInfluences: child.morphTargetInfluences,
                 })
             }
         })
@@ -51,6 +53,8 @@ export const Asset = ({
             geometry={item.geometry}
             material={item.material}
             skeleton={skeleton}
+            morphTargetDictionary={item.morphTargetDictionary}
+            morphTargetInfluences={item.morphTargetInfluences}
             castShadow
             receiveShadow
         />

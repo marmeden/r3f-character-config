@@ -45,11 +45,11 @@ const AssetsBox = () => {
                     <button
                         onClick={() => changeAsset(currentCategory.name, null)}
                         className={`w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden pointer-events-auto hover:opacity-100 transition-all border-2 duration-300
-                        bg-gradient-to-tr from-black to-gray-800
+                        bg-gradient-to-tr
                         ${
                             !customization[currentCategory.name].asset
-                            ? "border-white from-white/20 to-white/30"
-                            : "from-black/70 to-black/20 border-black"
+                                ? "border-white from-white/20 to-white/30"
+                                : "from-black/70 to-black/20 border-black"
                         }`}
                     >
                         <div className="w-full h-full flex items-center justify-center bg-black/40 text-white">
@@ -74,11 +74,11 @@ const AssetsBox = () => {
                     <button
                         key={index}
                         onClick={() => changeAsset(currentCategory.name, asset)}
-                        className={`w-20 h-20 rounded-md overflow-hidden pointer-events-auto  hover:opacity-100 transition-all border-2 duration-300 cursor-pointer bg-gradient-to-tr from-black to-gray-800
+                        className={`w-20 h-20 rounded-md overflow-hidden pointer-events-auto  hover:opacity-100 transition-all border-2 duration-300 cursor-pointer bg-gradient-to-tr
                             ${
                                 customization[currentCategory.name]?.asset?.id === asset.id
-                                ? "border-white opacity-100"
-                                : "border-black opacity-80"
+                                ? "border-white from-white/20 to-white/30"
+                                : "from-black/70 to-black/20 border-black"
                             }
                         `}>
                         <img 

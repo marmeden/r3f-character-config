@@ -38,7 +38,7 @@ export const useConfiguratorStore = create((set, get) => ({
         get().skin.color.set(color)
     },
     fetchCategories: async() => {
-        const res = await fetch(`${url}/api/customization-groups?populate=startingAsset, customizationPalette`);
+        const res = await fetch(`${url}/api/customization-groups?populate=startingAsset, customizationPalette,cameraPlacement`);
         const data = await res.json()
 
         console.log(data)
@@ -50,7 +50,8 @@ export const useConfiguratorStore = create((set, get) => ({
                 id: c.id,
                 startingAsset: c.attributes.startingAsset.data?.id,
                 colorPalette: c.attributes.customizationPalette.data?.attributes.colors,
-                removable: c.attributes.removable
+                removable: c.attributes.removable,
+                cameraPlacement: c.attributes.cameraPlacement.data?.attributes
             }
         })
 

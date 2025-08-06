@@ -2,6 +2,7 @@ import { OrbitControls } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
 import { UI } from "./components/UI"
 import { Experience } from "./components/Experience"
+import { DEFAULT_CAMERA_POSITION } from './components/CameraManager'
 
 function App() {
   return (
@@ -9,7 +10,7 @@ function App() {
       <UI></UI>
       <Canvas 
         camera={{
-          position: [-1, 1, 5],
+          position: DEFAULT_CAMERA_POSITION,
           fov: 45
         }}
         shadows

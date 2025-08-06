@@ -1,16 +1,12 @@
 import { Avatar } from "./Avatar"
-import { Backdrop, OrbitControls, SoftShadows } from "@react-three/drei"
+import { CameraManager } from "./CameraManager"
+import { Backdrop, SoftShadows } from "@react-three/drei"
 import { Environment } from "@react-three/drei"
 
 export const Experience = () => {
     return (
         <>
-            <OrbitControls 
-                minPolarAngle={Math.PI /4}
-                maxPolarAngle={Math.PI /2}
-                minAzimuthAngle={-Math.PI /4}
-                maxAzimuthAngle={Math.PI /4}
-            />
+            <CameraManager />
             <Environment preset="sunset" environmentIntensity={0.3} />
 
             <Backdrop scale={[50, 10, 5]} floor={1.5} receiveShadow position-z={-4}>
