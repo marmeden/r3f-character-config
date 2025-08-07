@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useConfiguratorStore } from "../store"
+import { grayscale } from "three/tsl";
 
 const AssetsBox = () => {
     const { 
@@ -136,7 +137,7 @@ export const UI = () => {
                     <a 
                         className="pointer-events-auto"
                         href="">
-                        Hey
+                        <img src="l1.png" width={64} style={{'filter': 'grayscale(1) contrast(0) brightness(2)',}} />
                     </a>
                     <div className="flex items-center gap-2">
                         <RandomizeButton />
