@@ -20,7 +20,7 @@ export const CameraManager = () => {
     })
 
     useEffect(() => {
-        if(currentCategory.cameraPlacement) {
+        if(currentCategory?.cameraPlacement) {
             controls.current.setLookAt(
                 ...currentCategory.cameraPlacement.position,
                 ...currentCategory.cameraPlacement.target,
