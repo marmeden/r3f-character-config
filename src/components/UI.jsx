@@ -63,7 +63,7 @@ const AssetsBox = () => {
                         .join(", ")}
                 </p>
             )}
-            <div className="flex gap-2 overflow-x px-6">
+            <div className="flex gap-2 overflow-x-auto px-6">
                 {currentCategory?.removable && (
                     <button
                         onClick={() => changeAsset(currentCategory.name, null)}
@@ -97,7 +97,7 @@ const AssetsBox = () => {
                     <button
                         key={index}
                         onClick={() => changeAsset(currentCategory.name, asset)}
-                        className={`w-20 h-20 rounded-md overflow-hidden pointer-events-auto  hover:opacity-100 transition-all border-2 duration-300 cursor-pointer bg-gradient-to-tr
+                        className={`w-20 h-20 flex-shrink-0 overflow-x-auto rounded-md overflow-hidden pointer-events-auto  hover:opacity-100 transition-all border-2 duration-300 cursor-pointer bg-gradient-to-tr
                             ${
                                 customization[currentCategory.name]?.asset?.id === asset.id
                                 ? "border-white from-white/20 to-white/30"
@@ -105,7 +105,7 @@ const AssetsBox = () => {
                             }
                         `}>
                         <img 
-                        className="object-cover w-full h-full flex-shrink-0"
+                        className="object-cover w-full h-full"
                         src={`${import.meta.env.VITE_API_URL}${asset.thumbnail}`} />
                     </button>
                 ))}
