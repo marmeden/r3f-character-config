@@ -15,6 +15,9 @@ function App() {
           position: DEFAULT_CAMERA_POSITION,
           fov: 45
         }}
+        gl={{
+          preserveDrawingBuffer: true
+        }}
         shadows
       >
         <color attach="background" args={["#130f30"]} />
