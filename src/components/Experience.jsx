@@ -1,11 +1,15 @@
 import { roughness } from "three/tsl"
 import { Avatar } from "./Avatar"
 import { CameraManager } from "./CameraManager"
-import { Backdrop, SoftShadows } from "@react-three/drei"
+import { Backdrop, SoftShadows, useProgress } from "@react-three/drei"
 import { Environment } from "@react-three/drei"
 import { useConfiguratorStore } from "../store"
 import { useThree } from "@react-three/fiber"
-import { useEffect } from "react"
+import { useEffect, useRef, useState } from "react"
+import { Gltf } from "@react-three/drei"
+import { Float } from "@react-three/drei"
+import { useSpring, animated } from "@react-spring/three"
+import { LoadingAvatar } from "./LoadingAvatar"
 
 export const Experience = () => {
 
@@ -58,12 +62,38 @@ export const Experience = () => {
         setScreenshot(screenshot)
     }, [gl])
 
+    const { active } = useProgress()
+    const [loading, setLoading] = useState(active)
+    const setLoadingAt = useRef(0)
+
+    useEffect(() => {
+        let timeout;
+        if(active) {
+            timeout = setTimeout(() => {
+                setLoading(true)
+                setLoadingAt.current = Date.now()
+            }, 50)
+        } else {
+            timeout = setTimeout(() => {
+                setLoading(false)
+
+            }, Math.max(0, 2000 - (Date.now() - setLoadingAt.current)))
+        }
+        return () => clearTimeout(timeout)
+    }, [active])
+
+    const { scale, spin, floatHeight } = useSpring({
+        scale: loading ? 0.5 : 1,
+        spin: loading ? Math.PI * 8 : 0,
+        floatHeight: loading ? 0.5 : 0
+    })
+
     return (
         <>
             <CameraManager />
             <Environment preset="sunset" environmentIntensity={0.3} />
 
-            <mesh receiveShadow rotation-x={-Math.PI / 2}>
+            <mesh receiveShadow rotation-x={-Math.PI / 2} position-y={-0.31}>
                 <planeGeometry args={[100, 100]}/>
                 <meshStandardMaterial color={'#333'} roughness={0.85} />
             </mesh>
@@ -81,7 +111,22 @@ export const Experience = () => {
             <directionalLight position={[-5, 5, 5]} intensity={0.7} />
             <directionalLight position={[3, 3, -5]} intensity={6} color={'#ff3b3b'} />
             <directionalLight position={[3, 3, -5]} intensity={8} color={'#3cb1ff'} />
-            <Avatar />
+            <Float
+                floatIntensity={loading ? 1 : 0} speed={loading ? 6 : 0}>
+                    <animated.group
+                        scale={scale}
+                        position-y={floatHeight}
+                        rotation-y={spin}>
+                        <Avatar />
+                    </animated.group>
+            </Float>
+            <Gltf 
+                position-y={-0.31}
+                src="/models/Teleporter Base.glb"
+                castShadow
+                receiveShadow
+            />
+            <LoadingAvatar loading={loading} />
         </>
     )
 }

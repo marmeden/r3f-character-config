@@ -3,6 +3,8 @@ import { useAnimations, useFBX, useGLTF } from "@react-three/drei"
 import { useConfiguratorStore } from "../store"
 import { Asset } from "./Asset"
 import { GLTFExporter } from "three-stdlib";
+import { NodeIO } from "@gltf-transform/core";
+import { dedup, draco, quantize } from "@gltf-transform/functions";
 
 export const Avatar = ({...props}) => {
     const group = useRef()
@@ -20,9 +22,18 @@ export const Avatar = ({...props}) => {
             const exporter = new GLTFExporter()
             exporter.parse(
                 group.current,
-                function (result) {
+                async function (result) {
+                    const io = new NodeIO()
+                    const document = await io.readBinary(new Uint8Array(result))
+                    await document.transform(
+                        dedup(),
+                        draco(),
+                        quantize()
+                    )
+                    const glb = await io.writeBinary(document)
+
                     save(
-                        new Blob([result], {type: "application/octet-stream"}),
+                        new Blob([glb], {type: "application/octet-stream"}),
                         `avatar_${+new Date()}.glb`
                     )
                 },

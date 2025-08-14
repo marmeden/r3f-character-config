@@ -4,12 +4,14 @@ import { button, useControls} from 'leva'
 import { useConfiguratorStore } from "../store"
 import { UI_MODES} from '../store'
 
+export const START_CAMERA_POSITION = [500, 10, 1000]
 export const DEFAULT_CAMERA_POSITION = [-1, 1, 5]
 export const DEFAULT_CAMERA_TARGET = [0, 0, 0]
 
 export const CameraManager = () => {
     const controls = useRef()
     const currentCategory = useConfiguratorStore((state) => state.currentCategory)
+    const initialLoading = useConfiguratorStore((state) => state.loading)
     const mode = useConfiguratorStore((state) => state.mode)
     useControls({
         getCameraPosition: button(() => {
@@ -22,7 +24,12 @@ export const CameraManager = () => {
     })
 
     useEffect(() => {
-        if(mode === UI_MODES.CUSTOMIZE && currentCategory?.cameraPlacement) {
+        if(initialLoading) {
+            controls.current.setLookAt(
+                ...START_CAMERA_POSITION,
+                ...DEFAULT_CAMERA_TARGET
+            )
+        } else if(mode === UI_MODES.CUSTOMIZE && currentCategory?.cameraPlacement) {
             controls.current.setLookAt(
                 ...currentCategory.cameraPlacement.position,
                 ...currentCategory.cameraPlacement.target,
@@ -35,7 +42,7 @@ export const CameraManager = () => {
                 true
             )
         }
-    }, [currentCategory, mode])
+    }, [currentCategory, mode, initialLoading])
     return (
         <CameraControls 
             ref={controls}

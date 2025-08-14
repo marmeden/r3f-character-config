@@ -23,6 +23,7 @@ export const UI_MODES = {
 }
 
 export const useConfiguratorStore = create((set, get) => ({
+    loading: true,
     mode: UI_MODES.CUSTOMIZE,
     setMode: (mode) => {
         set({ mode});
@@ -108,7 +109,7 @@ export const useConfiguratorStore = create((set, get) => ({
             }
         })
 
-        set({ categories, currentCategory: categories[0], assets, customization })
+        set({ categories, currentCategory: categories[0], assets, customization, loading: false })
         get().applyLockedAssets()
     },
 
