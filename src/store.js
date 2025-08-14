@@ -7,7 +7,31 @@ if(!url) {
     throw new Error("API URL is required")
 }
 
+export const PHOTO_POSES = {
+    Idle: "Idle",
+    Chill: "Chill",
+    Cool: "Cool",
+    Punch: "Punch",
+    Ninja: "Ninja",
+    King: "King",
+    Busy: "Busy" 
+}
+
+export const UI_MODES = {
+    PHOTO: "photo",
+    CUSTOMIZE: "customize"
+}
+
 export const useConfiguratorStore = create((set, get) => ({
+    mode: UI_MODES.CUSTOMIZE,
+    setMode: (mode) => {
+        set({ mode});
+        if(mode === UI_MODES.CUSTOMIZE) {
+            set({ pose: PHOTO_POSES.Idle })
+        }
+    },
+    pose: PHOTO_POSES.Idle,
+    setPose: (pose => set({pose})),
     categories: [],
     currentCategory: null,
     assets: [],
